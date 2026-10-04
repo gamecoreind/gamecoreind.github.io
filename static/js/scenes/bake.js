@@ -1,4 +1,4 @@
-import { audio , playOverlap } from "../audio.js";
+import { audio , dialogVoice, playDialogVoice, playOverlap } from "../audio.js";
 import { Input } from "../engine/event.js";
 import { NodeGroup, NodeObject } from "../engine/node.js";
 import { Rect } from "../engine/rect.js";
@@ -6,7 +6,7 @@ import { Scene } from "../engine/scene.js";
 import { UIObject, UITextView } from "../engine/ui.js";
 import { bgmButton, display, displayRect, nextSceneButton } from "../root.js";
 import { Sprites } from "../sprites.js";
-import { cuttingScene } from "./cutv2.js";
+import { cuttingScene } from "./cut.js";
 
 
 const bakeSceneDisplay = new NodeObject(Sprites.bg.baking.oven[0],displayRect.copy())
@@ -70,7 +70,7 @@ const textGuideText = [
     "buka oven",
     "masukan adonan bolu kemojo kedalam oven",
     "tutup oven",
-    `saat oven di nyalakan, mari berhitung ${oven.cookDuration} detik sampai bolu kemojo nya matang!`
+    `ayo lanjut memanggang bolu kemojo, saat oven di nyalakan, mari kita hitung ${oven.cookDuration} detik`,
 ]
 const textGuide = new UITextView(new Rect(0,0,displayRect.width - 500,500),textGuideText[0],"55px Arial","white",80,0,10,"#0a0a0a",[0,0],["center","center"],"middle")
 textGuide.rect.y = -100
@@ -132,6 +132,7 @@ function bakeProcessScene() {
         // finish
         if (oven.finish) {
             if (!oven.doorOpened && oven.clicked) {
+                playDialogVoice("bake","lets_cut")
                 audio.tada.play()
                 oven.doorOpened = true
             } else if (oven.doorOpened) {
@@ -157,6 +158,7 @@ function bakeProcessScene() {
                 oven.cookCurrentDuration = 0
                 oven.cookProcess = false 
                 oven.finish = true
+                playDialogVoice("bake","open_oven")
 
                 textGuide.rect.y = -100
                 textGuide.rect.centerx = displayRect.centerx
@@ -184,14 +186,16 @@ function bakeProcessScene() {
         // open the door
         } else if (!oven.doorOpened && !oven.moldPlaced && oven.clicked && !moldStats.grabbed && sceneStart > 10) {
             playOverlap(audio.ovenClick)
+            playDialogVoice("bake","put_dough")
             oven.doorOpened = true
 
             oven.scene++
             textGuide.rewrite(textGuideText[oven.scene])
 
-        // put the fucking mold
+        // put the mold
         } else if (oven.doorOpened && !oven.moldPlaced && oven.moldDetectRect.colliderect(mold.rect) && oven.clicked) {
             playOverlap(audio.ovenClick)
+            playDialogVoice("bake","close_oven")
             oven.moldPlaced = true
             const i = bakeSceneGroup.nodes.indexOf(mold)
             bakeSceneGroup.nodes.splice(i,1)
@@ -202,6 +206,7 @@ function bakeProcessScene() {
         // close the door
         } else if (oven.doorOpened && oven.moldPlaced && oven.clicked && !mold.grabbed) {
             playOverlap(audio.ovenClick)
+            playDialogVoice("bake","lets_bake")
             bakeButton.spawn = true
             oven.doorOpened = false
             oven.scene++
@@ -210,6 +215,7 @@ function bakeProcessScene() {
         // turn on the oven
         } else if (!oven.doorOpened && oven.moldPlaced && bakeButton.clicked) {
             audio.ovenStart.play()
+            
             bakeButton.rect.top = displayRect.bottom
             oven.cookCurrentDuration = oven.cookDuration
             oven.alreadyCook = true
@@ -231,5 +237,6 @@ function bakeProcessScene() {
 
 bakeScene.startEvent = () => {
     bakeProcessScene()
+    playDialogVoice("bake","open_oven")
     nextSceneButton.nextScene = cuttingScene
 }

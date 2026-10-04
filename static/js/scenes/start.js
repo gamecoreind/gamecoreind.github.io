@@ -6,7 +6,7 @@ import { bgmButton, display , displayRect } from "../root.js"
 import { Rect } from "../engine/rect.js"
 import { openingScene, showDialogueButton, textDialogue } from "./opening.js"
 import { GridTransition } from "../engine/transition.js"
-import { audio, playOverlap } from "../audio.js"
+import { playDialogVoice } from "../audio.js"
 
 export const transitiongrid = new GridTransition()
 
@@ -21,6 +21,7 @@ const startButton = new UIButton(
                 if (transitiongrid.finish) {
                     display.sceneTransition = null
                     textDialogue.startWrite()
+                    playDialogVoice("opening",0)
                     showDialogueButton()
                     display.deleteProcess("toOpening")
                 }
@@ -104,14 +105,10 @@ const creditText = new UITextView(new Rect(logo.rect.right + 20,credit.rect.y + 
 const startSceneNodes = new NodeGroup([startButton,leaf_1,leaf_2,bgmButton])
 export const startScene = new Scene([startSceneNodes],Sprites.bg.start)
 
-const loadingText = document.getElementById("loadingText")
+document.getElementById("loadingText").classList.add("hidden")
+document.getElementById("canvas").classList.remove("hidden")
 
-startScene.startEvent = () => {
-    loadingText.classList.add("hidden")
-    display.deleteProcess("loadingAnimation")
-    document.getElementById("canvas").classList.remove("hidden")
-}
-
+bgmButton.bgm.volume = 0.5
 bgmButton.pause()
 document.addEventListener("pointerdown",() => {
     bgmButton.init = true

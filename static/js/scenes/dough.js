@@ -1,4 +1,4 @@
-import { audio, playOverlap } from "../audio.js";
+import { audio, dialogVoice, playDialogVoice, playOverlap } from "../audio.js";
 import { Input } from "../engine/event.js";
 import { Random } from "../engine/math.js";
 import { NodeGroup, NodeObject } from "../engine/node.js";
@@ -15,7 +15,7 @@ export const table = new NodeObject(Sprites.bg.doughing.table,displayRect.copy()
 const textGuideIngredients = [
     // put all ingredients            step , length
     "pertama masukkan tepung terigu", // 0 , 1
-    "kedua masukkan telur",           // 1 , 2
+    "masukkan telur",           // 1 , 2
     "lalu masukkan gula pasir",       // 2 , 3
     "setelah itu masukkan santan kelapa",    // 3 , 4
     "dan lalu tambahkan pandan",      // 4 , 5
@@ -43,11 +43,13 @@ class Bowl extends UIObject {
     }
     nextStep() {
         if (this.finish) {
+            
             return
         }
         // dough
         if (this.stir.currentRound >= this.stir.roundMax) {
             playOverlap(audio.correctItem)
+            playDialogVoice("dough",dialogVoice.dough.length - 1)
             this.sprite = Sprites.item.bowl.dough
             textGuideSpawnAnimation()
             textGuide.rect.y -= 20
@@ -85,12 +87,15 @@ class Bowl extends UIObject {
             textGuide.rewrite(textGuideStir)
         } else {
             step++
+            playOverlap(audio.correctItem)
+            
             if (step > textGuideIngredients.length - 1) {
                 this.stir.mode = true
                 step = 0
                 this.nextStep()
                 return
             } 
+            playDialogVoice("dough",step)
             this.sprite = Sprites.item.bowl.doughing[step]
             textGuideSpawnAnimation()
             textGuide.rewrite(textGuideIngredients[step])
@@ -210,7 +215,7 @@ function putIngredients() {
                     selected = null
                 }
                 bowl.nextStep()
-                playOverlap(audio.correctItem)
+                
             }
         } else {
             item.rect.midbottom = item.originPos
@@ -232,6 +237,7 @@ export const doughScene = new Scene([doughSceneNodes,items],Sprites.bg.doughing.
 
 doughScene.startEvent = () => {
     let signSpawnSpeed = 20
+    playDialogVoice("dough",step)
 
     const subY = -300
     textGuide.rect.y += subY

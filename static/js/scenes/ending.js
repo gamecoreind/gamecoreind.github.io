@@ -1,4 +1,4 @@
-import { audio, playOverlap } from "../audio.js";
+import { audio, playDialogVoice, playOverlap } from "../audio.js";
 import { NodeGroup, NodeObject } from "../engine/node.js";
 import { Rect } from "../engine/rect.js";
 import { Scene } from "../engine/scene.js";
@@ -30,6 +30,7 @@ nextButton.event.noevent = () => {
 nextButton.event.mouseup = () => {
     playOverlap(audio.dialogueButton)
     dialogIndex++
+    playDialogVoice("ending",dialogIndex)
     textDialogue.rewrite(dialogue[dialogIndex])
 }
 
@@ -45,6 +46,7 @@ prevButton.event.noevent = () => {
 prevButton.event.mouseup = () => {
     playOverlap(audio.dialogueButton)
     dialogIndex--
+    playDialogVoice("ending",dialogIndex)
     textDialogue.rewrite(dialogue[dialogIndex])
 }
 
@@ -84,3 +86,7 @@ display.addProcess("dialogueController",() => {
 
 const endingSceneGroup = new NodeGroup([characterDialog,textDialogue,backToStartButton,prevButton,nextButton,bgmButton])
 export const endingScene = new Scene([endingSceneGroup],Sprites.bg.kitchen)
+
+endingScene.startEvent = () => {
+    playDialogVoice("ending",0)
+}

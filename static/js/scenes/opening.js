@@ -5,7 +5,7 @@ import { Sprites } from "../sprites.js"
 import { bgmButton, displayRect , nextSceneButton } from "../root.js"
 import { Rect } from "../engine/rect.js"
 import { doughScene } from "./dough.js"
-import { audio, playOverlap } from "../audio.js"
+import { audio, playOverlap , playDialogVoice } from "../audio.js"
 
 export const kitchenBG = new NodeObject(Sprites.bg.kitchen,displayRect)
 
@@ -13,7 +13,7 @@ const char = new NodeObject(Sprites.dialog.char_text,displayRect)
 
 const dialog = [
     "bolu kemojo adalah makanan khas melayu riau.",
-    "nama 'kemojo' atau sering disebut bolu kojo berasal dari cetakan atau loyang tradisional yang bentuknya menyerupai bunga kamboja.",
+    "nama 'kemojo' atau sering disebut bolu kojo berasal dari cetakan tradisional yang bentuknya menyerupai bunga kamboja.",
     "yuk kita belajar cara memasak bolu kemojo."
 ]
 let dialogIndex = 0
@@ -56,12 +56,13 @@ nextButton.rect.right = textDialogue.rect.right
 nextButton.rect.centery = dialogButtonY
 
 prevButton.event.mouseup = () => {
-    playOverlap(audio.dialogueButton)
     if (dialogIndex <= 0) {
         prevButton.hide()
         return
     }
     dialogIndex -= 1
+    playDialogVoice("opening",dialogIndex)
+    playOverlap(audio.dialogueButton)
     textDialogue.rewrite(dialog[dialogIndex])
     nextButton.show()
     if (dialogIndex <= 0) {
@@ -70,13 +71,13 @@ prevButton.event.mouseup = () => {
 }
 
 nextButton.event.mouseup = () => {
-    playOverlap(audio.dialogueButton)
     if (dialogIndex >= dialog.length - 1) {
         nextButton.hide()
         return
     }
-    
     dialogIndex += 1
+    playDialogVoice("opening",dialogIndex)
+    playOverlap(audio.dialogueButton)
     textDialogue.rewrite(dialog[dialogIndex])
     prevButton.show()
     if (dialogIndex >= dialog.length - 1) {

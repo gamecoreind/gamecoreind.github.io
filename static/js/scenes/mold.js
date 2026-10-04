@@ -1,4 +1,4 @@
-import { audio } from "../audio.js";
+import { audio, playDialogVoice } from "../audio.js";
 import { Input } from "../engine/event.js";
 import { NodeGroup, NodeObject } from "../engine/node.js";
 import { Rect } from "../engine/rect.js";
@@ -47,6 +47,7 @@ moldRect.center = mold.rect.center
 let nextButtonSpawn = false
 
 moldScene.startEvent = () => {
+    playDialogVoice("mold",0)
     display.addProcess("bowlRotate",() => {
         if (finish) {
             if (bowl.rotation.value > 0) {
@@ -71,6 +72,7 @@ moldScene.startEvent = () => {
             finish = true
             audio.correct.play()
             textGuide.rewrite("ayo lanjut memanggang bolu kemojo!")
+            playDialogVoice("mold",1)
 
             bowl.rotation.value = 1
             bowl.rect.bottomright = mold.rect.center

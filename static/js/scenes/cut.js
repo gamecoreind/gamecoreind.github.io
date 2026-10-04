@@ -1,4 +1,4 @@
-import { audio, playOverlap } from "../audio.js";
+import { audio, dialogVoice, playDialogVoice, playOverlap } from "../audio.js";
 import { Random } from "../engine/math.js";
 import { NodeGroup, NodeObject } from "../engine/node.js";
 import { Rect } from "../engine/rect.js";
@@ -20,7 +20,7 @@ function textGuideTextOptionRequest() {
         case 2:
             return `yuk kita potong bolu kemojonya menjadi ${value} potong, yang mana angka ${value}?`
         case 4:
-            return `keren sekarang mari potong lagi menjadi ${value} potong, yang mana angka ${value}?`
+            return `sekarang mari potong lagi menjadi ${value} potong, yang mana angka ${value}?`
         case 8:
             return `terakhir mari potong menjadi ${value} potong, yang mana angka ${value}?`
         case "finish":
@@ -72,11 +72,14 @@ for (let i=0;i<3;i++) {
     btn.event.mouseup = () => {
         if (btn.value === getOptionRequest()) {
             playOverlap(audio.correct)
+            
             kemojo.sprite = Sprites.item.kemojo[`opt_${getOptionRequest()}`]
             optionRequestIndex++
+            playDialogVoice("cut",optionRequestIndex)
             if (optionRequestIndex < 3) {
                 textGuide.refresh()
                 optionsReshuffle()
+                
             } else {
                 buttonOptions.nodes.length = 0
                 nextSceneButton.spawn()
@@ -85,6 +88,7 @@ for (let i=0;i<3;i++) {
             }
         } else {
             playOverlap(audio.wrong)
+            playDialogVoice("cut",dialogVoice.cut.length - 1)
             textGuide.falseOption(btn.value)
         }
     }
@@ -112,8 +116,11 @@ function optionsReshuffle() {
 }
 optionsReshuffle()
 
-
+loadingText.classList.add("hidden")
+    display.deleteProcess("loadingAnimation")
+    document.getElementById("canvas").classList.remove("hidden")
 export const cuttingScene = new Scene([cuttingSceneGroups,buttonOptions],Sprites.bg.tablecloth)
 cuttingScene.startEvent = () => {
+    playDialogVoice("cut",0)
     nextSceneButton.nextScene = endingScene
 }
