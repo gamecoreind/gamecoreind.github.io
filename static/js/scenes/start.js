@@ -108,7 +108,7 @@ export const startScene = new Scene([startSceneNodes],Sprites.bg.start)
 document.getElementById("loadingText").classList.add("hidden")
 document.getElementById("canvas").classList.remove("hidden")
 
-bgmButton.bgm.volume = 0.5
+bgmButton.bgm.volume = 1
 bgmButton.pause()
 document.addEventListener("pointerdown",() => {
     bgmButton.init = true
