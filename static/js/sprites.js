@@ -6,12 +6,14 @@ const [
     bg__leaf,
     bg__kitchen,
     bg__tableCloth,
+
     bg__baking__oven_1,
     bg__baking__oven_2,
     bg__baking__oven_3,
     bg__baking__oven_4,
     bg__baking__oven_5,
     bg__baking__ready,
+    
     bg__doughing__bg,
     bg__doughing__table,
 
