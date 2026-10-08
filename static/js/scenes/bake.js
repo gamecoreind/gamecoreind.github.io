@@ -4,7 +4,7 @@ import { NodeGroup, NodeObject } from "../engine/node.js";
 import { Rect } from "../engine/rect.js";
 import { Scene } from "../engine/scene.js";
 import { UIObject, UITextView } from "../engine/ui.js";
-import { bgmButton, display, displayRect, nextSceneButton } from "../root.js";
+import { bgmButton, display, displayRect, homeButton, nextSceneButton } from "../root.js";
 import { Sprites } from "../sprites.js";
 import { cuttingScene } from "./cut.js";
 
@@ -77,7 +77,7 @@ textGuide.rect.y = -100
 textGuide.rect.centerx = displayRect.centerx
 textGuide.scale.enable = true
 
-const bakeSceneGroup = new NodeGroup([bakeSceneDisplay,mold,readyView,bakeButton,textGuide,nextSceneButton,bgmButton])
+const bakeSceneGroup = new NodeGroup([bakeSceneDisplay,mold,readyView,bakeButton,textGuide,nextSceneButton,bgmButton,homeButton])
 export const bakeScene = new Scene([bakeSceneGroup])
 
 let sceneStart = 0

@@ -4,7 +4,7 @@ import { NodeGroup, NodeObject } from "../engine/node.js";
 import { Rect } from "../engine/rect.js";
 import { Scene } from "../engine/scene.js";
 import { UIButton, UITextView } from "../engine/ui.js";
-import { bgmButton, display, displayRect, nextSceneButton } from "../root.js";
+import { bgmButton, display, displayRect, homeButton, nextSceneButton } from "../root.js";
 import { Sprites } from "../sprites.js";
 import { endingScene } from "./ending.js";
 
@@ -53,7 +53,7 @@ display.addProcess("uiResponse",() => {
 })
 
 const kemojo = new NodeObject(Sprites.item.kemojo.full,displayRect.copy())
-const cuttingSceneGroups = new NodeGroup([kemojo,textGuide,nextSceneButton,bgmButton])
+const cuttingSceneGroups = new NodeGroup([kemojo,textGuide,nextSceneButton,bgmButton,homeButton])
 
 // button Options
 const buttonSize = 200

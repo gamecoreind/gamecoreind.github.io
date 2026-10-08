@@ -3,7 +3,7 @@ import { NodeGroup, NodeObject } from "../engine/node.js";
 import { Rect } from "../engine/rect.js";
 import { Scene } from "../engine/scene.js";
 import { UIButton, UITextView } from "../engine/ui.js";
-import { bgmButton, display, displayRect } from "../root.js";
+import { bgmButton, display, displayRect, homeButton } from "../root.js";
 import { Sprites } from "../sprites.js";
 
 const dialogue = [
@@ -78,15 +78,29 @@ display.addProcess("dialogueController",() => {
     if (dialogIndex >= dialogue.length - 1) {
         nextButton.hide()
         nextButton.allow.update = false
+        homeButtonScene.showUp = true
     } else {
         nextButton.show()
         nextButton.allow.update = true
     }
 })
 
-const endingSceneGroup = new NodeGroup([characterDialog,textDialogue,backToStartButton,prevButton,nextButton,bgmButton])
+
+const homeButtonScene = new UIButton(Sprites.ui.homeButton,new Rect(0,0,200,200),() => {window.location.href = "https://app.lumi.education/run/pfNGU3"})
+homeButtonScene.rect.midtop = [displayRect.centerx,displayRect.height]
+homeButtonScene.speed = 30
+homeButtonScene.showUp = false
+
+const endingSceneGroup = new NodeGroup([characterDialog,textDialogue,backToStartButton,prevButton,nextButton,bgmButton,homeButtonScene,homeButton])
 export const endingScene = new Scene([endingSceneGroup],Sprites.bg.kitchen)
 
 endingScene.startEvent = () => {
     playDialogVoice("ending",0)
+
+    display.addProcess("showHome",() => {
+        if (homeButtonScene.rect.y > displayRect.centery + 250 && homeButtonScene.showUp) {
+            homeButtonScene.rect.y -= homeButtonScene.speed
+            homeButtonScene.speed *= 0.88
+        }
+    })
 }

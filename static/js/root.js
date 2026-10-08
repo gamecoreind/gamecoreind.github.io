@@ -92,3 +92,6 @@ class BGMButton extends UIObject {
 }
 
 export const bgmButton = new BGMButton()
+
+export const homeButton = new UIButton(Sprites.ui.homeButton,new Rect(0,0,...bgmButton.rect.size),() => {window.location.href = "https://app.lumi.education/run/pfNGU3"})
+homeButton.rect.midtop = [bgmButton.rect.centerx,bgmButton.rect.bottom + 20]
